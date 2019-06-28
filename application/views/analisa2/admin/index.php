@@ -29,7 +29,7 @@
 						<div class="col-sm-2 col-md-2">
 							<div class="form-group">
 								<label class="hidden-xs">&nbsp</label>
-								<button type="button" url="<?= base_url($global->url.'cetak')?>" onclick="alert('cetak')" class="btn btn-flat btn-block btn-warning hide" id="cetak"><i class="fa fa-print"></i></button>
+								<button type="button" onclick="cetak()" class="btn btn-flat btn-block btn-warning hide" id="cetak"><i class="fa fa-print"></i></button>
 							</div>
 						</div>						
 					</div>
@@ -70,23 +70,10 @@
 		$("#tabels").load(url);
 	}, 200);
 	$(document).ready(function(){
-		// $('#pekerjaans').change(function(){
-		// 	// var url=$(this).attr('url');
-		// 	var id=$(this).val();
-		// 	alert(id);
-		// 	// $.ajax({
-		// 	// 	type:'POST',
-		// 	// 	url:url,
-		// 	// 	data:{id:id},
-		// 	// 	success:function(data){
-		// 	// 		$("#view").html(data);       
-		// 	// 	}
-		// 	// })
-		// 	return false;        
-		// })
 		$('#cari').click(function(){
 			var url=$(this).attr('url');
 			var id=$("#pekerjaan").val();
+			var href='<?= base_url($global->url.'cetak/')?>'
 			//alert(id);
 			$.ajax({
 				type:'POST',
@@ -95,9 +82,14 @@
 				success:function(data){
 					//alert(id);
 					$("#tabel").html(data); 
-					$("#cetak").removeClass('hide');      
+					$("#cetak").removeClass('hide');  
+					$("#cetak").attr("url", href+id+'.html');	    
 				}
 			})		
 		})		 		
-	})   	 
+	});
+    function cetak(){
+    	url=$('#cetak').attr('url');
+		window.open(url,'name','width=800,height=600');   	
+    }  	   	 
 </script>

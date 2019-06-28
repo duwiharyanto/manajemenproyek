@@ -1,4 +1,4 @@
-<p class="help-block text-red ">Silahkan refresh setelah diupdate</p>
+<p class="help-block text-red ">Silahkan refresh untuk cek data</p>
 <div class="form-group">
 
   <button class="btn btn-xs btn-success btn-flat " onclick="loaddata(<?= $pekerjaan_id?>)" id="tafsirantmbl" url="<?= base_url($global->url.'addtafsiran')?>" value="<?= $pekerjaan_id?>">Refresh <i class="fa fa-refresh"></i></button> 
@@ -114,8 +114,8 @@
     	</table>
       <table class="table" width="100%">
         <tr>
-          <td width="75%" align="right"><h3>Grand Total</h3></td>
-          <td class="price bg-red" style="font-size: 48px"><?= intval($subtotaltaksiran)+intval($subtotalpekerjaan)?></td>
+          <td width="60%" align="left"><h3>Grand Total</h3></td>
+          <td class="price bg-red" align="right" style="font-size: 48px"><?= intval($subtotaltaksiran)+intval($subtotalpekerjaan)?></td>
         </tr>
       </table>
     </div>

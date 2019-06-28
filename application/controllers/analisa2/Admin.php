@@ -15,7 +15,11 @@ class Admin extends Master {
 	private $default_view="analisa2/admin/";
 	private $view="template/backend";
 	private $id="analisa_id";
-
+	//ATRIBUT CETAK
+	private $atributcetak=[
+		'tempat'=>'magelang',
+		'ttd'=>'Prasetio Dwi Nugroho,ST',
+	];
 	private function global_set($data){
 		$data=array(
 			'menu'=>'analisis',
@@ -519,6 +523,147 @@ class Admin extends Master {
 		//redirect(site_url($this->default_url));
 	}
 
+	public function cetak($id=null){
+		$config=$this->atributcetak;
+		$global_set=array(
+			'headline'=>'laporan analisa pekerjaan',
+			'url'=>'analisa2/admin/',
+		);
+		$global=$this->global_set($global_set);	
+		//QUERY
+		$analisa=array(
+			'tabel'=>'analisa',
+			'where'=>array(array('analisa_idpekerjaan'=>$id)),
+		//'order'=>array('kolom'=>'analisa_analisa','orderby'=>'DESC'),
+		);
+		$analisa=$this->Crud->read($analisa)->result();	
+		$dtanalisasatuan=array();
+		$dtanalisatafsiran=array();
+		$res=array();
+		foreach ($analisa as $index => $row) {
+			if(!$row->analisa_idtafsiran){
+				$dtanalisasatuan[$index]=$row;
+			}else{
+				$tafsiran=array(
+					'select'=>'a.*,b.*',
+					'tabel'=>'analisa a',
+					'join'=>array(array('tabel'=>'taksiran b','ON'=>'b.taksiran_id=a.analisa_idtafsiran','jenis'=>'INNER')),
+					'order'=>array('kolom'=>'b.taksiran_uraian','orderby'=>'ASC'),
+					'where'=>array(array('a.analisa_idpekerjaan'=>$id))
+				);
+				$res=$this->Crud->join($tafsiran)->result();				
+				$dtanalisatafsiran=$res;
+				$res=$res;
+			}
+		}
+		$tafsiran=array(
+			'tabel'=>'taksiran',
+			'order'=>array('kolom'=>'taksiran_id','orderby'=>'DESC'),
+		);		
+		$q_analisapekerjaan=array(
+			'tabel'=>'analisapekerjaan',
+			'where'=>array(array('analisapekerjaan_idpekerjaan'=>$id)),
+		);	
+
+		$r_analisapekerjaan=$this->Crud->read($q_analisapekerjaan)->result();
+
+		$jumlah=0;
+		$detailanalisapekerjaan=array();	
+		if($r_analisapekerjaan){
+			foreach ($r_analisapekerjaan as $index => $row) {
+				$detailanalisapekerjaan[$index]=$row;
+				$q_detailanalisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.hargasatuan_hargasatuan FROM analisadetail a 
+				JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
+				WHERE a.analisadetail_idanalisapekerjaan=$row->analisapekerjaan_id";
+				$r_detailanalisapekerjaan=$this->Crud->hardcode($q_detailanalisapekerjaan)->result();
+				$jumlahtotal=0;
+				foreach ($r_detailanalisapekerjaan as $index2 => $rows) {
+
+					$jumlah+=intval($rows->analisadetail_koefisien)*intval($rows->hargasatuan_hargasatuan);
+					$jumlahtotal=$jumlah;
+				}
+				$detailanalisapekerjaan[$index]->jumlah=$jumlahtotal;
+
+
+
+			}			
+		}		
+		$data=array(
+			'global'=>$global,
+			'config'=>$config,
+			'datasatuan'=>$dtanalisasatuan,
+			'datatafsiran'=>$dtanalisatafsiran,
+			'analisapekerjaan2'=>$detailanalisapekerjaan,
+			'analisapekerjaan'=>$this->Crud->read($q_analisapekerjaan)->result(),
+			'tafsiran'=>$this->Crud->read($tafsiran)->result(),
+			'pekerjaan_id'=>$id,
+			'res'=>$res,			
+		);		
+		$cetak=[
+			'view'=>$this->load->view($this->default_view.'cetak',$data,true),	
+			'judul'=>$global_set['headline'],
+		];	
+		$this->prosescetak($cetak);			
+	}
+	public function cetakdetailanalisapekerjaan($id=null){
+		$config=$this->atributcetak;
+		$global_set=array(
+			'headline'=>'laporan analisa pekerjaan',
+			'url'=>'analisa2/admin/',
+		);
+		$global=$this->global_set($global_set);
+		if(!$id){
+			$id=$this->input->post('id');
+		}else{
+			$id=$id;
+		}
+		$analisapekerjaan=array(
+			'tabel'=>'analisadetail',
+			'where'=>array(array('analisadetail_idanalisapekerjaan'=>$id)),
+		);
+		// $q_analisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.*,c.kategorisatuan_nama,d.satuan_kode FROM analisadetail a 
+		// 	JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
+		// 	JOIN kategorisatuan c ON c.kategorisatuan_id=b.hargasatuan_idkategori
+		// 	JOIN satuan d ON d.satuan_id=b.hargasatuan_satuan";
+		//$r_analisapekerjaan=$this->Crud->hardcode($q_analisapekerjaan)->result();	
+		$q_kategorisatuan=[
+			'select'=>'kategorisatuan_nama,kategorisatuan_id',
+			'tabel'=>'kategorisatuan',
+		];
+		$r_kategorisatuan=$this->Crud->read($q_kategorisatuan)->result();
+		$r_detailanalisapekerjaan=array();
+		foreach($r_kategorisatuan AS $index => $row){
+			$q_analisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.*,c.kategorisatuan_nama,d.satuan_kode FROM analisadetail a 
+				JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
+				JOIN kategorisatuan c ON c.kategorisatuan_id=b.hargasatuan_idkategori
+				JOIN satuan d ON d.satuan_id=b.hargasatuan_satuan
+				WHERE c.kategorisatuan_id=$row->kategorisatuan_id AND a.analisadetail_idanalisapekerjaan=$id";
+			$r_analisapekerjaan=$this->Crud->hardcode($q_analisapekerjaan)->result();
+			if($r_analisapekerjaan){
+				$r_detailanalisapekerjaan[$index]=$row;
+				$r_detailanalisapekerjaan[$index]->data=$r_analisapekerjaan;					
+			}
+			
+		}
+		$pekerjaan=array(
+			'tabel'=>'analisapekerjaan',
+			'where'=>array(array('analisapekerjaan_id'=>$id)),
+		);
+		$result=$this->Crud->read($analisapekerjaan)->result();						
+		$data=array(
+			'global'=>$global,
+			'config'=>$config,			
+			//'detailanalisapekerjaan'=>$this->Crud->hardcode($q_analisapekerjaan)->result(),
+			'detailanalisapekerjaan'=>$r_detailanalisapekerjaan,
+			'analisapekerjaan'=>$this->Crud->read($pekerjaan)->row(),
+			'analisapekerjaan_id'=>$id,
+		);
+		$cetak=[
+			'view'=>$this->load->view($this->default_view.'cetakdetailanalisapekerjaan',$data,true),	
+			'judul'=>$global_set['headline'],
+		];	
+		$this->prosescetak($cetak);		
+	}
 	public function downloadberkas($file){
 		$path=$this->path;
 		$this->downloadfile($path,$file);
