@@ -82,8 +82,21 @@ class Admin2 extends Master
             'tabel' => $this->master_tabel,
             'order' => array('kolom' => 'user_nama', 'orderby' => 'DESC'),
         );
+        $r_user=$this->Crud->read($query)->result();
+        $listuser=array();
+        foreach($r_user AS $index => $row){
+            $listuser[$index]=$row;
+            $listuser[$index]->log=false;
+            $listuser[$index]->tanggallog=false;
+            $q_log="SELECT log_id,log_date,log_keterangan FROM log  WHERE log_iduser=$row->user_id ORDER BY log_id DESC LIMIT 1";
+            $r_log=$this->Crud->hardcode($q_log)->row();
+            if ($r_log) {
+               $listuser[$index]->log=$r_log->log_keterangan;
+               $listuser[$index]->tanggallog=$r_log->log_date;
+            }
+        }
         $data = array(
-            'data' => $this->Crud->read($query)->result(),
+            'data' => $listuser,
             'global' => $global,
         );
         $this->load->view($this->default_view . 'tabel', $data);

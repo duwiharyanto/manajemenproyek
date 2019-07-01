@@ -123,6 +123,25 @@
 			</table>');		
 			$mpdf->WriteHTML($data['view']);
 			$mpdf->Output($nama_dokumen.".pdf",'I');		
+		}
+		protected function log($param){
+			date_default_timezone_set('Asia/Jakarta');
+			$list=[
+				'1'=>'login',
+				'2'=>'logout',
+			];
+			$action=$list[$param['loglist']];
+			$data=[
+				'log_iduser'=>$param['userid'],
+				'log_keterangan'=>$action,
+				'log_date'=>date('Y-m-d H:i:s'),
+			];
+			$q_log=[
+				'tabel'=>'log',
+				'data'=>$data,
+			];
+			$r_log=$this->Crud->insert($q_log);
+			return $r_log;
 		}					
 	}
 ?>

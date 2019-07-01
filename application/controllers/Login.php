@@ -1,6 +1,7 @@
 <?php
-
-	class Login extends CI_Controller
+defined('BASEPATH') or exit('No direct script access allowed');
+include APPPATH . 'controllers/master.php';
+	class Login extends Master
 	{
 		
 		function __construct(){
@@ -44,29 +45,39 @@
 						'user_tersimpan'=>$user->user_tersimpan,
 						'user_login'=>true,
 						);
-				$this->session->set_userdata($dt_session);				
-				if($this->session->userdata('user_level')==1){
-					//echo "login";
-				 	redirect(site_url("hargasatuan/admin"));
-				 	//print_r($this->session->userdata());
-				 	//if(($this->session->userdata('user_login')<>1) || ($this->session->userdata('user_level')<>1)){
-				 	// if(($this->session->userdata('user_login')<>1) OR ($this->session->userdata('user_level')<>1) ){
-				 	// 	echo "login";
-				 	// }else{
-				 	// 	echo "logout";
-				 	// }		 	
+				$this->session->set_userdata($dt_session);
+				$logdata=[
+					'userid'=>$dt_session['user_id'],
+					'loglist'=>1,
+				];
+				$log=$this->log($logdata);
+				if($log){
+					if($this->session->userdata('user_level')==1){
+					 	redirect(site_url("hargasatuan/admin"));		 	
+					}else{
+					}
 				}else{
-					//echo "login";
-					//redirect(site_url("formulir/user"));	
-				}
+					$this->session->set_flashdata('error','log error');
+					redirect(base_url('Login'));					
+				}				
 			}else{
 				$this->session->set_flashdata('error','username tidak ditemukan');
 				redirect(base_url('Login'));
 			}
 		}
 		function logout(){
-			$this->session->sess_destroy();			
-			redirect(base_url('Login'));
+			$logdata=[
+				'userid'=>$this->session->userdata('user_id'),
+				'loglist'=>2,
+			];
+			$log=$this->log($logdata);			
+			if($log){
+				$this->session->sess_destroy();			
+				redirect(base_url('Login'));
+			}else{
+				$this->session->set_flashdata('error','log error');
+				redirect(base_url('Login'));
+			}
 		}	
 		function notfound(){
 			$this->session->sess_destroy();	

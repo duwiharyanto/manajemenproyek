@@ -50,7 +50,7 @@
                     <?php $total=0; ?>
                     <?php if($detailanalisapekerjaan):?>
                         <?php $i=1;foreach ($detailanalisapekerjaan as $row):?>
-                            <tr style="background-color: grey">
+                            <tr >
                                 <td colspan="7"><?= $i.'. '.ucwords($row->kategorisatuan_nama)?></td>
                             </tr>
 
@@ -95,7 +95,7 @@
                             <td colspan="7" align="left">Data tidak ditemukan</td>
                         </tr>                        
                     <?php endif;?>
-                    <tr style="background-color: grey">
+                    <tr >
                         <td colspan="5" align="right">Total</td>
                         <td colspan="2" class="price"><?= "Rp " . number_format($total,0,',','.')?></td>
                     </tr>

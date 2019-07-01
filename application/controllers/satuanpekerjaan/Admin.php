@@ -40,8 +40,7 @@ class Admin extends Master {
 		$global_set=array(
 			'headline'=>'harga satuan pekerjaan',
 			'url'=>'satuanpekerjaan/admin/',
-		);
-				
+		);	
 		$global=$this->global_set($global_set);
 		if($this->input->post('submit')){
 			//PROSES SIMPAN
@@ -110,7 +109,6 @@ class Admin extends Master {
 		$data=array(
 			'global'=>$global,
 			);
-
 		$this->load->view($this->default_view.'add',$data);		
 	}	
 	public function edit(){
