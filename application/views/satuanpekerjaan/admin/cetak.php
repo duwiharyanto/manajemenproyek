@@ -37,64 +37,48 @@
 					</tr>						
 				</table>
 				<hr>
-				<table class="table table-striped" width="100%">
-					<tr>
-						<th width="20%" align="left">Kode</th>
-						<td width="80%">TS002 </td>
-					</tr>
-					<tr>
-						<th align="left">Nama Pekerjaan</th>
-						<td >Test 2 </td>
-					</tr>						
-					<tr>
-						<th align="left">Overhead</th>
-						<td>15</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<table id="table" class="table table-bordered" width="100%" cellpadding="0" cellspacing="0">
-								<tr style="background-color: grey;">
-									<th width="5%">No</th>
-									<th width="15%">Kode</th>
-									<th width="30%">Satuan</th>
-									<th width="25%">Uraian</th>
-									<th width="25%">Nominal</th>
-								</tr>
-								<?php if($data):?>
-									<?php $i=1;foreach($data AS $row):?>
-										<tr>
-											<td><?= $i?></td>
-											<td><?= $row->analisapekerjaan_kode?></td>
-											<td><?= $row->satuan_kode?></td>
-											<td><?= $row->hargasatuan_uraian?></td>
-											<td><?= $row->hargasatuan_hargasatuan?></td>
-										</tr>
-									<?php $i++;endforeach;?>									
-								<?php else:?>
-									<tr>
-										<td colspan="5" align="center">Data tidak ditemukan</td>
-									</tr>
-								<?php endif;?>
-							</table>								
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" style="height: 40px"></td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<table id="table3" style="padding: 10px" align="right">
-								<tr>
-									<td align="center"><?= ucwords($config['tempat']).', '.date('d-m-Y')?><br>dibuat oleh<br><br><br>
-										<br><br>
-									<b><?= ucwords($config['ttd'])?></b><br>
-									<i>Direktur</i>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>						
-				</table>					
+				<table id="table" class="table table-striped" width="100%" cellpadding="0" cellspacing="0">
+					<thead>
+						<tr class="bg-blue">
+							<td width="5%">No</td>
+							<td width="10%">Kode</td>
+							<td width="55%">Uraian Pekerjaan</td>
+							<td width="10%">Satuan</td>
+							<td width="20%">Harga Satuan</td>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if($data):?>
+							<?php $i=1;$grandtotal=0;foreach($data AS $row):?>
+							<tr>
+								<td><?=$i?></td>
+								<td><?=$row->analisapekerjaan_kode?></td>
+								<td><?=$row->analisapekerjaan_kegiatan?></td>
+								<td><?=$row->satuan_satuan?></td>
+								<td class="price"><?=duit($row->hargasatuan)?></td>
+							</tr>
+							<?php $grandtotal+=$row->hargasatuan;?>								
+							<?php $i++;endforeach;?>
+							<tr>
+								<td colspan="4" align="right">Total</td>
+								<td class="bg-red"><?=duit($grandtotal);?></td>
+							</tr>							
+						<?php else:?>
+							<tr>
+								<td colspan="5">Data tidak ditemukan</td>
+							</tr>
+						<?php endif;?>
+					</tbody>		
+				</table>
+	            <table id="table3" style="padding: 10px" align="right">
+	                <tr>
+	                    <td align="center"><?= ucwords($config['tempat']).', '.date('d-m-Y')?><br>dibuat oleh<br><br><br>
+	                        <br><br>
+	                        <b><?= ucwords($config['ttd'])?></b><br>
+	                        <i>Direktur</i>
+	                    </td>
+	                </tr>
+	            </table> 									
 			</div>
 		</div>
 	</div>

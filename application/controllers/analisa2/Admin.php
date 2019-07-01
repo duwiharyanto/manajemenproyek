@@ -127,10 +127,8 @@ class Admin extends Master {
 			'tabel'=>'analisapekerjaan',
 			'where'=>array(array('analisapekerjaan_idpekerjaan'=>$id)),
 		);	
-
 		$r_analisapekerjaan=$this->Crud->read($q_analisapekerjaan)->result();
 		
-		$jumlah=0;
 		$detailanalisapekerjaan=array();	
 		if($r_analisapekerjaan){
 			foreach ($r_analisapekerjaan as $index => $row) {
@@ -139,6 +137,7 @@ class Admin extends Master {
 					JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
 					WHERE a.analisadetail_idanalisapekerjaan=$row->analisapekerjaan_id";
 				$r_detailanalisapekerjaan=$this->Crud->hardcode($q_detailanalisapekerjaan)->result();
+				$jumlah=0;
 				$jumlahtotal=0;
 				foreach ($r_detailanalisapekerjaan as $index2 => $rows) {
 					
@@ -146,9 +145,6 @@ class Admin extends Master {
 					$jumlahtotal=$jumlah;
 				}
 				$detailanalisapekerjaan[$index]->jumlah=$jumlahtotal;
-				
-				
-
 			}			
 		}
 		$data=array(

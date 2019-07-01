@@ -79,25 +79,53 @@ class Admin extends Master {
 		);
 		$global=$this->global_set($global_set);		
 		//PROSES TAMPIL DATA
-		$query="SELECT a.analisapekerjaan_idpekerjaan,a.analisapekerjaan_overhead,a.analisapekerjaan_kegiatan,a.analisapekerjaan_kode,b.analisadetail_idhargasatuan,c.hargasatuan_kode,c.hargasatuan_uraian,c.hargasatuan_hargasatuan,z.satuan_kode FROM analisapekerjaan a 
-			LEFT JOIN analisadetail b ON b.analisadetail_idanalisapekerjaan=a.analisapekerjaan_id
-			LEFT JOIN hargasatuan c ON c.hargasatuan_id=b.analisadetail_idhargasatuan
-			JOIN pekerjaan d ON d.pekerjaan_id=a.analisapekerjaan_idpekerjaan
-			JOIN satuan z ON z.satuan_id=a.analisapekerjaan_idsatuan
-			WHERE md5(d.pekerjaan_id)='$id'";
-
 		$pekerjaan=array(
 			'tabel'=>'pekerjaan',
 			'where'=>array(array('md5(pekerjaan_id)'=>$id)),
 		);
-		$res=$this->Crud->hardcode($query)->result();
+		// $q_analisapekerjaan=array(
+		// 	'tabel'=>'analisapekerjaan',
+		// 	'where'=>array(array('md5(analisapekerjaan_idpekerjaan)'=>$id)),
+		// );
+		$q_analisapekerjaan=[
+			'select'=>'a.*,b.satuan_satuan',
+			'tabel'=>'analisapekerjaan a',
+			'join'=>[
+				['tabel'=>'satuan b','ON'=>'b.satuan_id=a.analisapekerjaan_idsatuan','jenis'=>'INNER']
+			],
+			'where'=>[
+				['md5(analisapekerjaan_idpekerjaan)'=>$id],
+			],
+		];			
+		$r_analisapekerjaan=$this->Crud->join($q_analisapekerjaan)->result();
+		$detailanalisapekerjaan=array();	
+		if($r_analisapekerjaan){
+			foreach ($r_analisapekerjaan as $index => $row) {
+				$detailanalisapekerjaan[$index]=$row;
+				$q_detailanalisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.hargasatuan_hargasatuan FROM analisadetail a 
+					JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
+					WHERE a.analisadetail_idanalisapekerjaan=$row->analisapekerjaan_id";
+				$r_detailanalisapekerjaan=$this->Crud->hardcode($q_detailanalisapekerjaan)->result();
+				$jumlah=0;
+				$jumlahtotal=0;
+				$nilaioverhead=0;
+				foreach ($r_detailanalisapekerjaan as $index2 => $rows) {
+					$jumlah+=intval($rows->analisadetail_koefisien)*intval($rows->hargasatuan_hargasatuan);
+					$jumlahtotal=$jumlah;
+					$nilaioverhead=intval(($jumlahtotal*$row->analisapekerjaan_overhead)/100);
+				}
+				$detailanalisapekerjaan[$index]->jumlah=$jumlahtotal;
+				$detailanalisapekerjaan[$index]->nilaioverhead=$nilaioverhead;
+				$detailanalisapekerjaan[$index]->hargasatuan=$nilaioverhead+$jumlahtotal;
+			}			
+		}		
 		$data=array(
 			'global'=>$global,
 			'pekerjaan'=>$this->Crud->read($pekerjaan)->row(),
-			'data'=>$res,
+			'data'=>$detailanalisapekerjaan,
 		);
 		$this->load->view($this->default_view.'detailpekerjaan',$data);		
-		//$this->dump_data($id);
+		//$this->dump_data($data);
 	}
 	public function add(){
 		$global_set=array(
@@ -168,22 +196,46 @@ class Admin extends Master {
 		);
 		$global=$this->global_set($global_set);		
 		//PROSES TAMPIL DATA
-		$query="SELECT a.analisapekerjaan_idpekerjaan,a.analisapekerjaan_overhead,a.analisapekerjaan_kegiatan,a.analisapekerjaan_kode,b.analisadetail_idhargasatuan,c.hargasatuan_kode,c.hargasatuan_uraian,c.hargasatuan_hargasatuan,z.satuan_kode FROM analisapekerjaan a 
-			LEFT JOIN analisadetail b ON b.analisadetail_idanalisapekerjaan=a.analisapekerjaan_id
-			LEFT JOIN hargasatuan c ON c.hargasatuan_id=b.analisadetail_idhargasatuan
-			JOIN pekerjaan d ON d.pekerjaan_id=a.analisapekerjaan_idpekerjaan
-			JOIN satuan z ON z.satuan_id=a.analisapekerjaan_idsatuan
-			WHERE md5(d.pekerjaan_id)='$id'";
-
 		$pekerjaan=array(
 			'tabel'=>'pekerjaan',
 			'where'=>array(array('md5(pekerjaan_id)'=>$id)),
 		);
-		$res=$this->Crud->hardcode($query)->result();
+		$q_analisapekerjaan=[
+			'select'=>'a.*,b.satuan_satuan',
+			'tabel'=>'analisapekerjaan a',
+			'join'=>[
+				['tabel'=>'satuan b','ON'=>'b.satuan_id=a.analisapekerjaan_idsatuan','jenis'=>'INNER']
+			],
+			'where'=>[
+				['md5(analisapekerjaan_idpekerjaan)'=>$id],
+			],
+		];	
+		$r_analisapekerjaan=$this->Crud->join($q_analisapekerjaan)->result();
+		$detailanalisapekerjaan=array();	
+		if($r_analisapekerjaan){
+			foreach ($r_analisapekerjaan as $index => $row) {
+				$detailanalisapekerjaan[$index]=$row;
+				$q_detailanalisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.hargasatuan_hargasatuan FROM analisadetail a 
+					JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
+					WHERE a.analisadetail_idanalisapekerjaan=$row->analisapekerjaan_id";
+				$r_detailanalisapekerjaan=$this->Crud->hardcode($q_detailanalisapekerjaan)->result();
+				$jumlah=0;
+				$jumlahtotal=0;
+				$nilaioverhead=0;
+				foreach ($r_detailanalisapekerjaan as $index2 => $rows) {
+					$jumlah+=intval($rows->analisadetail_koefisien)*intval($rows->hargasatuan_hargasatuan);
+					$jumlahtotal=$jumlah;
+					$nilaioverhead=intval(($jumlahtotal*$row->analisapekerjaan_overhead)/100);
+				}
+				$detailanalisapekerjaan[$index]->jumlah=$jumlahtotal;
+				$detailanalisapekerjaan[$index]->nilaioverhead=$nilaioverhead;
+				$detailanalisapekerjaan[$index]->hargasatuan=$nilaioverhead+$jumlahtotal;
+			}			
+		}
 		$data=array(
 			'global'=>$global,
 			'pekerjaan'=>$this->Crud->read($pekerjaan)->row(),
-			'data'=>$res,
+			'data'=>$detailanalisapekerjaan,
 			'config'=>$config,
 		);
 		$cetak=[
