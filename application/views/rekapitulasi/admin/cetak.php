@@ -31,15 +31,15 @@
 						<td><?= ucwords($pekerjaan->pekerjaan_lokasi)?></td>
 					</tr>						
 				</table>
-				<hr>
+				<br>
 				<table  class="table table-striped" width="100%" >
 					<tr>
 						<td colspan="2">
 							<table id="table" class="table table-striped" width="100%" cellspacing="0" cellpadding="0">
 								<tr style="background-color: gray">
 									<td width="5%">No</td>
-									<td width="80%">Uraian Pekerjaan</td>
-									<td width="15%">Jumlah</td>
+									<td width="75%">Uraian Pekerjaan</td>
+									<td width="20%">Jumlah</td>
 								</tr>
 								<?php $i=1;$jumlah=0;foreach($rekapitulasi AS $row):?>
 									<tr>
@@ -86,7 +86,9 @@
 					<td colspan="2">
 						<table id="table3" style="padding: 10px" align="right">
 							<tr>
-								<td align="center"><?= ucwords($config['tempat']).', '.date('d-m-Y')?><br>dibuat oleh<br><br><br>
+								<td align="center"><?= ucwords($config['tempat']).', '.date('d-m-Y')?><br>dibuat oleh<br>
+									<?= strtoupper($config['cv'])?>
+									<br><br>
 									<br><br>
 								<b><?= ucwords($config['ttd'])?></b><br>
 								<i>Direktur</i>

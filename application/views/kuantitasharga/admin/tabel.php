@@ -104,7 +104,7 @@
 					                  <th width="5%">id</th>
 					                  <th width="10%">Kode</th>
 					                  <th width="35%">Uraian</th>
-					                  <th width="15%">Volume</th>
+					                  <th width="15%">Volume*</th>
 					                  <th width="15%">Harga Satuan</th>
 					                  <th width="15%" class="text-center bg-red" >Harga Total*</th>
 					                </tr>
@@ -120,7 +120,7 @@
 						                		<td><?=$row->analisapekerjaan_id?></td>
 						                		<td><?=$row->analisapekerjaan_kode?></td>
 						                		<td><?=ucwords($row->analisapekerjaan_kegiatan)?></td>
-						                		<td>54,5</td>
+						                		<td><?= $row->analisapekerjaan_volume?></td>
 						                		<td class="price"><?php
 						                			$hargasatuan=0;
 						                            $overhead=intval(intval($row->jumlah) * intval($row->analisapekerjaan_overhead)/100);
@@ -129,7 +129,7 @@
 						                		?></td>
 						                		<td class="price">
 													<?php
-														$total=intval($hargasatuan)*floatval(54.5);
+														$total=intval($hargasatuan)*floatval($row->analisapekerjaan_volume);
 														echo ceil($total);
 													?>
 						                		</td>

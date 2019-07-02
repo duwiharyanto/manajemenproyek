@@ -1,14 +1,3 @@
-<?php if(!$satuanpekerjaan AND !$satuanpekerjaan):?>
-	<div class="row">
-		<div class="col-sm-12">
-			<div class="alert alert-danger alert-dismissible">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-				<h4><i class="icon fa fa-ban"></i> Perhatian !</h4>
-					Data tidak ditemukan
-			</div>			
-		</div>
-	</div>
-<?php else:?>
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="box box-primary box-solid">
@@ -50,14 +39,16 @@
 										<th width="15%">Jumlah</th>
 									</tr>
 									<?php $i=1;$jumlah=0;foreach($rekapitulasi AS $row):?>
-										<tr>
-											<td><?= $i?></td>
-											<td><?= ucwords($row['pekerjaan'])?></td>
-											<td align="right" class="price"><?= $row['jumlah']?></td>
-										</tr>
-										<?php
-											$jumlah+=$row['jumlah'];
-										?>
+										<?php if($row['pekerjaan']):?>
+											<tr>
+												<td><?= $i?></td>
+												<td><?= ucwords($row['pekerjaan'])?></td>
+												<td align="right" class="price"><?= $row['jumlah']?></td>
+											</tr>
+											<?php
+												$jumlah+=$row['jumlah'];
+											?>											
+										<?php endif;?>
 									<?php $i++;endforeach;?>
 									<tr style="background-color: black;color: white">
 										<td colspan="2" align="right">Jumlah</td>
@@ -79,11 +70,12 @@
 									</tr>	
 									<tr style="background-color: black;color: white">
 										<td colspan="2" align="right">Pembulatan</td>
-										<td class="price"><?php
-										 	
-										 	echo $grandtotal;
-										 	?></td>
-									</tr>																											
+										<td class="price">
+											<?php
+										 		echo $grandtotal;
+										 	?>
+										 </td>
+									</tr>											
 								</table>								
 							</td>
 						</tr>						
@@ -91,8 +83,7 @@
 				</div>
 			</div>
 		</div>
-	</div>	
-<?php endif;?>
+	</div>
 <?php
 	include 'action.js';
 ?>

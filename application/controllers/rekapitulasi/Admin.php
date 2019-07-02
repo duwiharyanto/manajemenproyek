@@ -17,6 +17,7 @@ class Admin extends Master {
 	private $id="analisapekerjaan_id";
 
 	private $atributcetak=[
+		'cv'=>'CV. ADHI KARYA NUGRAHA',
 		'tempat'=>'magelang',
 		'ttd'=>'Prasetio Dwi Nugroho,ST',
 	];
@@ -60,41 +61,58 @@ class Admin extends Master {
 			'url'=>'rekapitulasi/admin/',
 		);
 		$global=$this->global_set($global_set);		
+		$q_pekerjaan=array(
+			'tabel'=>'pekerjaan',
+			'where'=>array(array('md5(pekerjaan_id)'=>$id)),
+		);
+		$pekerjaan=$this->Crud->read($q_pekerjaan)->row();
 		//PROSES TAMPIL DATA
-		$query="SELECT d.pekerjaan_kegiatan,a.analisapekerjaan_kegiatan,a.analisapekerjaan_overhead,b.analisadetail_idhargasatuan,c.hargasatuan_kode,c.hargasatuan_uraian,c.hargasatuan_hargasatuan,z.satuan_kode FROM analisapekerjaan a 
-			JOIN analisadetail b ON b.analisadetail_idanalisapekerjaan=a.analisapekerjaan_id
-			JOIN hargasatuan c ON c.hargasatuan_id=b.analisadetail_idhargasatuan
-			JOIN pekerjaan d ON d.pekerjaan_id=a.analisapekerjaan_idpekerjaan
-			JOIN satuan z ON z.satuan_id=a.analisapekerjaan_idsatuan
-			WHERE md5(a.analisapekerjaan_idpekerjaan)='$id'";
-
+		$q_analisapekerjaan=array(
+			'tabel'=>'analisapekerjaan',
+			'where'=>array(array('md5(analisapekerjaan_idpekerjaan)'=>$id)),
+		);	
+		$r_analisapekerjaan=$this->Crud->read($q_analisapekerjaan)->result();
+		$detailanalisapekerjaan=array();
+		$keseluruhansatuanpekerjaan=0;	
+		if($r_analisapekerjaan){
+			$keseluruhansatuanpekerjaan=0;
+			foreach ($r_analisapekerjaan as $index => $row) {
+				$jumlah=0;
+				$overheadprofit=0;
+				$detailanalisapekerjaan[$index]=$row;
+				$q_detailanalisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.hargasatuan_hargasatuan FROM analisadetail a 
+				JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
+				WHERE a.analisadetail_idanalisapekerjaan=$row->analisapekerjaan_id";
+				$r_detailanalisapekerjaan=$this->Crud->hardcode($q_detailanalisapekerjaan)->result();
+				$jumlahtotal=0;
+				foreach ($r_detailanalisapekerjaan as $index2 => $rows) {
+					$jumlah+=intval($rows->analisadetail_koefisien)*intval($rows->hargasatuan_hargasatuan);
+					$jumlahtotal=$jumlah;
+					$overheadprofit=intval(($jumlahtotal*$row->analisapekerjaan_overhead)/100);
+					$nilaibersih=$jumlahtotal+$overheadprofit;
+					$kuantitas=$nilaibersih*floatval($row->analisapekerjaan_volume);
+				}
+				$detailanalisapekerjaan[$index]->jumlah=$jumlahtotal;
+				$detailanalisapekerjaan[$index]->overheadprofit=$overheadprofit;
+				$detailanalisapekerjaan[$index]->nilaibersih=$nilaibersih;
+				$keseluruhansatuanpekerjaan+=$kuantitas;
+			}
+						
+		}
+		$satuanpekerjaankeseluruhan=[
+			'pekerjaan'=>ucwords($pekerjaan->pekerjaan_pekerjaan),
+			'jumlah'=>$keseluruhansatuanpekerjaan,
+		];		
 		$taksiran="SELECT c.pekerjaan_kegiatan,a.analisa_id,b.*,d.satuan_kode,d.satuan_satuan FROM analisa a 
 			JOIN taksiran b ON b.taksiran_id=a.analisa_idtafsiran
 			JOIN pekerjaan c ON c.pekerjaan_id=a.analisa_idpekerjaan
 			JOIN satuan d ON d.satuan_id=b.taksiran_satuan
 			WHERE md5(a.analisa_idpekerjaan)='$id'";
-
-		$respekerjaan=$this->Crud->hardcode($query)->result();
 		$restaksiran=$this->Crud->hardcode($taksiran)->result();
-
-		//AMBIL NAMA PEKERJAAN DARI ARRAY DIATAS
-		if($respekerjaan){
-			$pekerjaankegiatan=$respekerjaan[0]->pekerjaan_kegiatan;
-			$jumlahsatuanpekerjaan=0;
-			foreach ($respekerjaan as $index => $row) {
-				$jumlahsatuanpekerjaan+=intval($row->hargasatuan_hargasatuan);
-			};
-			$arrsatuanpekerjaan=[
-				'pekerjaan'=>$pekerjaankegiatan,
-				'jumlah'=>$jumlahsatuanpekerjaan,
-			];						
-		}else{
-			$arrsatuanpekerjaan=[
-				'pekerjaan'=>'tidak ditemukan',
-				'jumlah'=>0,
-			];
-		}
-
+		$arrtaksiran=[
+			'pekerjaan'=>'tidak ditemukan',
+			'jumlah'=>0,
+		];			
 		if($restaksiran){
 			$taksiran="pekerjaan persiapan dan prasarana penunjang";
 			$jumlahtaksiran=0;
@@ -105,31 +123,20 @@ class Admin extends Master {
 				'pekerjaan'=>$taksiran,
 				'jumlah'=>$jumlahtaksiran,
 			];			
-		}else{
-			$arrtaksiran=[
-				'pekerjaan'=>'tidak ditemukan',
-				'jumlah'=>0,
-			];		
-		};
+		}
 		$rekapitulasi=[
-			'0'=>$arrsatuanpekerjaan,
+			'0'=>$satuanpekerjaankeseluruhan,
 			'1'=>$arrtaksiran,
 		];
 
-		$pekerjaan=array(
-			'tabel'=>'pekerjaan',
-			'where'=>array(array('md5(pekerjaan_id)'=>$id)),
-		);
-		//$pekerjaan="SELECT * FROM pekerjaan WHERE md5(pekerjaan_id)='$id'";		
-		$res=$this->Crud->hardcode($query)->result();
 		$data=array(
 			'global'=>$global,
-			'pekerjaan'=>$this->Crud->read($pekerjaan)->row(),
-			'satuanpekerjaan'=>$arrsatuanpekerjaan,
+			'pekerjaan'=>$pekerjaan,
+			'nilaibersih'=>$keseluruhansatuanpekerjaan,
 			'taksiran'=>$arrtaksiran,
 			'rekapitulasi'=>$rekapitulasi,
 		);
-		$this->load->view($this->default_view.'detailpekerjaan',$data);		
+		$this->load->view($this->default_view.'detailpekerjaan',$data);				
 		//$this->dump_data($data);
 	}
 	public function add(){
@@ -196,45 +203,62 @@ class Admin extends Master {
 	public function cetak($id=null){
 		$config=$this->atributcetak;
 		$global_set=array(
-			'headline'=>'laporan rincian pekerjaan',
+			'headline'=>'laporan rekapitulasi daftar kuantitas dan harga',
 			'url'=>'rekapitulasi/admin/',
 		);
-		$global=$this->global_set($global_set);		
-		//PROSES TAMPIL DATA
-		$query="SELECT d.pekerjaan_kegiatan,a.analisapekerjaan_kegiatan,a.analisapekerjaan_overhead,b.analisadetail_idhargasatuan,c.hargasatuan_kode,c.hargasatuan_uraian,c.hargasatuan_hargasatuan,z.satuan_kode FROM analisapekerjaan a 
-			JOIN analisadetail b ON b.analisadetail_idanalisapekerjaan=a.analisapekerjaan_id
-			JOIN hargasatuan c ON c.hargasatuan_id=b.analisadetail_idhargasatuan
-			JOIN pekerjaan d ON d.pekerjaan_id=a.analisapekerjaan_idpekerjaan
-			JOIN satuan z ON z.satuan_id=a.analisapekerjaan_idsatuan
-			WHERE md5(a.analisapekerjaan_idpekerjaan)='$id'";
-
+		$global=$this->global_set($global_set);
+		$q_pekerjaan=array(
+			'tabel'=>'pekerjaan',
+			'where'=>array(array('md5(pekerjaan_id)'=>$id)),
+		);
+		$pekerjaan=$this->Crud->read($q_pekerjaan)->row();		
+		$q_analisapekerjaan=array(
+			'tabel'=>'analisapekerjaan',
+			'where'=>array(array('md5(analisapekerjaan_idpekerjaan)'=>$id)),
+		);	
+		$r_analisapekerjaan=$this->Crud->read($q_analisapekerjaan)->result();
+		//DEKALARI VAR AWAL
+		$detailanalisapekerjaan=array();
+		$keseluruhansatuanpekerjaan=0;	
+		if($r_analisapekerjaan){
+			$keseluruhansatuanpekerjaan=0;
+			foreach ($r_analisapekerjaan as $index => $row) {
+				$jumlah=0;
+				$overheadprofit=0;
+				$detailanalisapekerjaan[$index]=$row;
+				$q_detailanalisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.hargasatuan_hargasatuan FROM analisadetail a 
+				JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
+				WHERE a.analisadetail_idanalisapekerjaan=$row->analisapekerjaan_id";
+				$r_detailanalisapekerjaan=$this->Crud->hardcode($q_detailanalisapekerjaan)->result();
+				$jumlahtotal=0;
+				foreach ($r_detailanalisapekerjaan as $index2 => $rows) {
+					$jumlah+=intval($rows->analisadetail_koefisien)*intval($rows->hargasatuan_hargasatuan);
+					$jumlahtotal=$jumlah;
+					$overheadprofit=intval(($jumlahtotal*$row->analisapekerjaan_overhead)/100);
+					$nilaibersih=$jumlahtotal+$overheadprofit;
+					$kuantitas=$nilaibersih*floatval($row->analisapekerjaan_volume);
+				}
+				$detailanalisapekerjaan[$index]->jumlah=$jumlahtotal;
+				$detailanalisapekerjaan[$index]->overheadprofit=$overheadprofit;
+				$detailanalisapekerjaan[$index]->nilaibersih=$nilaibersih;
+				$keseluruhansatuanpekerjaan+=$kuantitas;
+			}
+						
+		}
+		$satuanpekerjaankeseluruhan=[
+			'pekerjaan'=>ucwords($pekerjaan->pekerjaan_pekerjaan),
+			'jumlah'=>$keseluruhansatuanpekerjaan,
+		];		
 		$taksiran="SELECT c.pekerjaan_kegiatan,a.analisa_id,b.*,d.satuan_kode,d.satuan_satuan FROM analisa a 
 			JOIN taksiran b ON b.taksiran_id=a.analisa_idtafsiran
 			JOIN pekerjaan c ON c.pekerjaan_id=a.analisa_idpekerjaan
 			JOIN satuan d ON d.satuan_id=b.taksiran_satuan
 			WHERE md5(a.analisa_idpekerjaan)='$id'";
-
-		$respekerjaan=$this->Crud->hardcode($query)->result();
 		$restaksiran=$this->Crud->hardcode($taksiran)->result();
-
-		//AMBIL NAMA PEKERJAAN DARI ARRAY DIATAS
-		if($respekerjaan){
-			$pekerjaankegiatan=$respekerjaan[0]->pekerjaan_kegiatan;
-			$jumlahsatuanpekerjaan=0;
-			foreach ($respekerjaan as $index => $row) {
-				$jumlahsatuanpekerjaan+=intval($row->hargasatuan_hargasatuan);
-			};
-			$arrsatuanpekerjaan=[
-				'pekerjaan'=>$pekerjaankegiatan,
-				'jumlah'=>$jumlahsatuanpekerjaan,
-			];						
-		}else{
-			$arrsatuanpekerjaan=[
-				'pekerjaan'=>'tidak ditemukan',
-				'jumlah'=>0,
-			];
-		}
-
+		$arrtaksiran=[
+			'pekerjaan'=>'tidak ditemukan',
+			'jumlah'=>0,
+		];			
 		if($restaksiran){
 			$taksiran="pekerjaan persiapan dan prasarana penunjang";
 			$jumlahtaksiran=0;
@@ -245,36 +269,25 @@ class Admin extends Master {
 				'pekerjaan'=>$taksiran,
 				'jumlah'=>$jumlahtaksiran,
 			];			
-		}else{
-			$arrtaksiran=[
-				'pekerjaan'=>'tidak ditemukan',
-				'jumlah'=>0,
-			];		
-		};
+		}
 		$rekapitulasi=[
-			'0'=>$arrsatuanpekerjaan,
+			'0'=>$satuanpekerjaankeseluruhan,
 			'1'=>$arrtaksiran,
 		];
 
-		$pekerjaan=array(
-			'tabel'=>'pekerjaan',
-			'where'=>array(array('md5(pekerjaan_id)'=>$id)),
-		);
-		$res=$this->Crud->hardcode($query)->result();
 		$data=array(
 			'global'=>$global,
-			'pekerjaan'=>$this->Crud->read($pekerjaan)->row(),
-			'satuanpekerjaan'=>$arrsatuanpekerjaan,
+			'config'=>$config,
+			'pekerjaan'=>$pekerjaan,
+			'nilaibersih'=>$keseluruhansatuanpekerjaan,
 			'taksiran'=>$arrtaksiran,
 			'rekapitulasi'=>$rekapitulasi,
-			'config'=>$config,
-				
-		);		
+		);				
 		$cetak=[
 			'view'=>$this->load->view($this->default_view.'cetak',$data,true),	
 			'judul'=>$global_set['headline'],
 		];
 		$this->prosescetak($cetak);		
-		//print_r($data['rekapitulasi']);
+		//print_r($data);
 	}
 }
