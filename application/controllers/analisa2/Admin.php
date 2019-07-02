@@ -87,11 +87,6 @@ class Admin extends Master {
 		}else{
 			$id=$id;
 		}
-		// $query=array(
-		// 	'tabel'=>$this->master_tabel,
-		// 	'where'=>array(array('analisa_id'=>$id)),
-		// );
-
 		//ANALISA TERDIRI DARI 2 BAGIAN BAGIAN TAFSIRAN DAN SATUAN
 		$analisa=array(
 			'tabel'=>'analisa',
@@ -563,10 +558,11 @@ class Admin extends Master {
 
 		$r_analisapekerjaan=$this->Crud->read($q_analisapekerjaan)->result();
 
-		$jumlah=0;
+		
 		$detailanalisapekerjaan=array();	
 		if($r_analisapekerjaan){
 			foreach ($r_analisapekerjaan as $index => $row) {
+				$jumlah=0;
 				$detailanalisapekerjaan[$index]=$row;
 				$q_detailanalisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.hargasatuan_hargasatuan FROM analisadetail a 
 				JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
@@ -574,14 +570,10 @@ class Admin extends Master {
 				$r_detailanalisapekerjaan=$this->Crud->hardcode($q_detailanalisapekerjaan)->result();
 				$jumlahtotal=0;
 				foreach ($r_detailanalisapekerjaan as $index2 => $rows) {
-
 					$jumlah+=intval($rows->analisadetail_koefisien)*intval($rows->hargasatuan_hargasatuan);
 					$jumlahtotal=$jumlah;
 				}
 				$detailanalisapekerjaan[$index]->jumlah=$jumlahtotal;
-
-
-
 			}			
 		}		
 		$data=array(

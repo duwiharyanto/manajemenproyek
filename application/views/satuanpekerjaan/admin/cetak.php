@@ -36,7 +36,7 @@
 						<td><?= ucwords($pekerjaan->pekerjaan_lokasi)?></td>
 					</tr>						
 				</table>
-				<hr>
+				<br>
 				<table id="table" class="table table-striped" width="100%" cellpadding="0" cellspacing="0">
 					<thead>
 						<tr class="bg-blue">
@@ -72,7 +72,9 @@
 				</table>
 	            <table id="table3" style="padding: 10px" align="right">
 	                <tr>
-	                    <td align="center"><?= ucwords($config['tempat']).', '.date('d-m-Y')?><br>dibuat oleh<br><br><br>
+	                    <td align="center"><?= ucwords($config['tempat']).', '.date('d-m-Y')?><br>dibuat oleh<br>
+							<?= strtoupper($config['cv'])?>
+	                    	<br><br>
 	                        <br><br>
 	                        <b><?= ucwords($config['ttd'])?></b><br>
 	                        <i>Direktur</i>

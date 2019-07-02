@@ -4,7 +4,7 @@
 			<div class="alert alert-danger alert-dismissible">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 				<h4><i class="icon fa fa-ban"></i> Perhatian !</h4>
-					Data Tafsiran tidak ditemukan
+					Data tidak ditemukan
 			</div>			
 		</div>
 	</div>
@@ -25,7 +25,15 @@
 						</tr>		    			
 		    			<tr>
 		    				<th width="10%">Pekerjaan</th>
-		    				<td width="90%"><?= ucwords($namaproyek)?></td>
+		    				<td width="90%"><?= ucwords($pekerjaan->pekerjaan_kegiatan)?></td>
+		    			</tr>
+		    			<tr>
+		    				<th>Tahun Anggaran</th>
+		    				<td><?= $pekerjaan->pekerjaan_tahunanggaran?></td>
+		    			</tr>
+		    			<tr>
+		    				<th>Lokasi</th>
+		    				<td><?= ucwords($pekerjaan->pekerjaan_lokasi)?></td>
 		    			</tr>
 		    		</table>
 		    		<br>
@@ -67,7 +75,7 @@
 						                	?>                	
 					                	<?php $i++;endforeach;?>
 				                		<tr>
-				                			<td colspan="6" align="right"> Jumlah Total</td>
+				                			<td colspan="6" align="right" class="text-red"> Jumlah Total*</td>
 				                			<td class="price"><?=$hargatotal?></td>
 				                		</tr>
 				                	<?php else:?>
@@ -98,33 +106,41 @@
 					                  <th width="35%">Uraian</th>
 					                  <th width="15%">Volume</th>
 					                  <th width="15%">Harga Satuan</th>
-					                  <th width="15%" class="text-center bg-red" >Harga Total</th>
+					                  <th width="15%" class="text-center bg-red" >Harga Total*</th>
 					                </tr>
 				                </thead>
 				                <tbody>
+				                	<?php $hargatotalpekerjaan=0;?>
 				                	<?php if($data):?>
-					                	<?php $i=1;$hargatotal=0;foreach ($data as $row):?>
+				                		
+					                	<?php $i=1;foreach ($data as $row):?>
+					                		<?php $total=0;?>
 						                	<tr>
 						                		<td><?=$i?></td>
-						                		<td><?=$row->analisadetail_idhargasatuan?></td>
-						                		<td><?=$row->hargasatuan_kode?></td>
+						                		<td><?=$row->analisapekerjaan_id?></td>
+						                		<td><?=$row->analisapekerjaan_kode?></td>
 						                		<td><?=ucwords($row->analisapekerjaan_kegiatan)?></td>
 						                		<td>54,5</td>
-						                		<td class="price"><?=$row->hargasatuan_hargasatuan?></td>
+						                		<td class="price"><?php
+						                			$hargasatuan=0;
+						                            $overhead=intval(intval($row->jumlah) * intval($row->analisapekerjaan_overhead)/100);
+						                            $hargasatuan=$overhead+intval($row->jumlah);
+						                            echo $hargasatuan;
+						                		?></td>
 						                		<td class="price">
 													<?php
-														$total=intval($row->hargasatuan_hargasatuan)*54.5;
-														echo $total;
+														$total=intval($hargasatuan)*floatval(54.5);
+														echo ceil($total);
 													?>
 						                		</td>
 						                	</tr>	
 						                	<?php
-						                		$hargatotal+=$total;
+						                		$hargatotalpekerjaan+=$total;
 						                	?>                	
 					                	<?php $i++;endforeach;?>
 				                		<tr>
-				                			<td colspan="6" align="right"> Jumlah Total</td>
-				                			<td class="price"><?=$hargatotal?></td>
+				                			<td colspan="6" align="right" class="text-red"> Jumlah Total*</td>
+				                			<td class="price"><?=ceil($hargatotalpekerjaan)?></td>
 				                		</tr>
 				                	<?php else:?>
 				                		<tr>
@@ -137,7 +153,14 @@
 				        	</table>								
 							</td>							
 						</tr>		    			
-		    		</table>		    				    		
+		    		</table>
+		    		<table class="table" width="100%">
+		    			<tr>
+		    				<td width="70%"><h2>Grand Total*</h2></td>
+		    				<td align="right" class="bg-red" ><h1><?= duit(ceil($hargatotalpekerjaan+$hargatotal))?></h1></td>
+		    			</tr>
+		    		</table>
+		    		<i class="text-red">* Melalui proses pembulatan keatas</i>		    				    		
 			    </div>
 			</div>		 	
 		 </div>

@@ -18,8 +18,9 @@ class Admin extends Master {
 
 	//
 	private $atributcetak=[
+		'cv'=>'CV. ADHI KARYA NUGRAHA',
 		'tempat'=>'magelang',
-		'ttd'=>'Prasetio Dwi Nugroho,ST',
+		'ttd'=>'Prasetio Dwi Nugroho, ST',
 	];
 	private function global_set($data){
 		$data=array(
@@ -191,7 +192,7 @@ class Admin extends Master {
 		//$id=$this->input->post('id');
 		$config=$this->atributcetak;
 		$global_set=array(
-			'headline'=>'laporan rincian pekerjaan',
+			'headline'=>'laporan harga satuan pekerjaan',
 			'url'=>'satuanpekerjaan/admin/',
 		);
 		$global=$this->global_set($global_set);		
