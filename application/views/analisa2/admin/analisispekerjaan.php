@@ -3,7 +3,7 @@
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Add <?php echo ucwords($global->headline)?></h4>
+				<h4 class="modal-title"><?php echo ucwords($global->headline)?></h4>
 		</div>
 		<form onsubmit="simpandetailanalisa()" url="<?= base_url($global->url.'simpandetailanalisa')?>" id="detailanalisa" method="POST">
 		<div class="modal-body">
@@ -12,7 +12,7 @@
 					<div class="col-sm-2">
 						<label>Kode</label>
 						<input required readonly type="text" name="analisa_kode" class="text-capitalize form-control" value="<?=$analisapekerjaan->analisapekerjaan_kode?>"></input>	
-						<input required readonly type="text" name="analisadetail_idpekerjaan" class="text-capitalize form-control hide" value="<?=$analisapekerjaan->analisapekerjaan_id?>"></input>										
+						<input required readonly type="text" name="analisadetail_idpekerjaan" class="text-capitalize form-control hide" value="<?=$analisapekerjaan->analisapekerjaan_id?>"></input>
 					</div>
 					<div class="col-sm-10">
 						<label>Kegiatan</label>

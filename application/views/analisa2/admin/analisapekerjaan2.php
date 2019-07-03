@@ -31,24 +31,29 @@
 							</select>
 							
 						</div>
-					</div>					
-
+					</div>	
+					<div class="col-sm-3">
+						<div class="form-group">
+							<label>Overhead & Profit</label><br>
+							<div class="input-group">	
+							<input required type="text" class="form-control" name="analisa_overhead" />
+							<span class="input-group-addon">%</span>
+							</div>
+						</div>
+					</div>				
+					<div class="col-sm-3">
+						<div class="form-group">
+							<label>Volume Pekerjaan</label>
+							<input required type="text" name="analisapekerjaan_volume" class="form-control">
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<label>Kegiatan</label>
-				<textarea required type="text" class="form-control"  name="analisa_kegiatan" rows="6"></textarea>
-						
-			</div>							
-			<div class="form-group">
-				<div class="row">
-					<div class="col-sm-offset-7 col-sm-5">
-						<label>Overhead & Profit 15%</label><br>	
-						<input required type="text" class="form-control" name="analisa_overhead" />		
-					</div>
-				</div>												
-			</div>
-			<div id="hasil"></div>
+				<textarea required type="text" class="form-control"  name="analisa_kegiatan" rows="6"></textarea>	
+			</div>	
+			<div id="hasil"></div>						
 		</div>
 		<div class="modal-footer">
 			<button type="submit" class="btn btn-primary btn-block btn-flat">Save changes</button>

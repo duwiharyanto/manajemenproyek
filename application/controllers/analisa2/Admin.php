@@ -134,12 +134,14 @@ class Admin extends Master {
 				$r_detailanalisapekerjaan=$this->Crud->hardcode($q_detailanalisapekerjaan)->result();
 				$jumlah=0;
 				$jumlahtotal=0;
+				$countdt=count($r_detailanalisapekerjaan);
+
 				foreach ($r_detailanalisapekerjaan as $index2 => $rows) {
-					
-					$jumlah+=intval($rows->analisadetail_koefisien)*intval($rows->hargasatuan_hargasatuan);
+					$jumlah+=floatval($rows->analisadetail_koefisien)*intval($rows->hargasatuan_hargasatuan);
 					$jumlahtotal=$jumlah;
 				}
 				$detailanalisapekerjaan[$index]->jumlah=$jumlahtotal;
+				$detailanalisapekerjaan[$index]->countdt=$countdt;
 			}			
 		}
 		$data=array(
@@ -272,11 +274,6 @@ class Admin extends Master {
 			'tabel'=>'analisadetail',
 			'where'=>array(array('analisadetail_idanalisapekerjaan'=>$id)),
 		);
-		// $q_analisapekerjaan="SELECT a.analisadetail_id,a.analisadetail_koefisien,b.*,c.kategorisatuan_nama,d.satuan_kode FROM analisadetail a 
-		// 	JOIN hargasatuan b ON b.hargasatuan_id=a.analisadetail_idhargasatuan
-		// 	JOIN kategorisatuan c ON c.kategorisatuan_id=b.hargasatuan_idkategori
-		// 	JOIN satuan d ON d.satuan_id=b.hargasatuan_satuan";
-		//$r_analisapekerjaan=$this->Crud->hardcode($q_analisapekerjaan)->result();	
 		$q_kategorisatuan=[
 			'select'=>'kategorisatuan_nama,kategorisatuan_id',
 			'tabel'=>'kategorisatuan',
@@ -294,7 +291,6 @@ class Admin extends Master {
 				$r_detailanalisapekerjaan[$index]=$row;
 				$r_detailanalisapekerjaan[$index]->data=$r_analisapekerjaan;					
 			}
-			
 		}
 		$pekerjaan=array(
 			'tabel'=>'analisapekerjaan',
@@ -302,7 +298,6 @@ class Admin extends Master {
 		);
 		$result=$this->Crud->read($analisapekerjaan)->result();						
 		$data=array(
-			//'detailanalisapekerjaan'=>$this->Crud->hardcode($q_analisapekerjaan)->result(),
 			'detailanalisapekerjaan'=>$r_detailanalisapekerjaan,
 			'analisapekerjaan'=>$this->Crud->read($pekerjaan)->row(),
 			'analisapekerjaan_id'=>$id,
@@ -310,7 +305,6 @@ class Admin extends Master {
 		);
 		$this->load->view($this->default_view.'detailanalisapekerjaan',$data);
 		//$this->dump_data($r_detailanalisapekerjaan);
-	
 	}
 	//ADD ANALISIS PEKERJAAN DETAIL SATUAN
 	public function addanalisispekerjaan(){
@@ -338,13 +332,14 @@ class Admin extends Master {
 	
 	}			
 	public function simpananalisa(){
+		$analisavolume=desimal($this->input->post('analisapekerjaan_volume'),3);
 		$data=array(
 			'analisapekerjaan_idpekerjaan'=>$this->input->post('pekerjaan_id'),
 			'analisapekerjaan_kode'=>$this->input->post('analisa_kode'),
 			'analisapekerjaan_kegiatan'=>$this->input->post('analisa_kegiatan'),
-			'analisapekerjaan_harga'=>$this->input->post('analisa_harga'),
 			'analisapekerjaan_overhead'=>$this->input->post('analisa_overhead'),
 			'analisapekerjaan_total'=>$this->input->post('analisa_total'),
+			'analisapekerjaan_volume'=>$analisavolume,
 			'analisapekerjaan_idsatuan'=>$this->input->post('analisapekerjaan_idsatuan'),
 			'analisapekerjaan_date'=>date('Y-m-d'),
 		);
@@ -369,7 +364,8 @@ class Admin extends Master {
 		}
 		return $this->output ->set_output(json_encode($dt));
 		//redirect(base_url($this->default_url));
-		//$this->dump_data($dt);
+		// $this->dump_data($data);
+		// exit();
 		//echo 'log';
 	}
 	public function simpandetailanalisa(){
@@ -383,7 +379,7 @@ class Admin extends Master {
 			$dt[$index]=array(
 				'analisadetail_idanalisapekerjaan'=>$data['analisadetail_idanalisapekerjaan'],
 				'analisadetail_idhargasatuan'=>$row,
-				'analisadetail_koefisien'=>$data['analisadetail_idanalisapekerjaan'][$index],
+				'analisadetail_koefisien'=>desimal($data['analisadetail_koefisien'][$index],3),
 				'analisadetail_date'=>date('Y-m-d'),
 			);
 		}
@@ -655,5 +651,14 @@ class Admin extends Master {
 	public function downloadberkas($file){
 		$path=$this->path;
 		$this->downloadfile($path,$file);
+	}
+	public function cekvar(){
+		$data='21214.78';
+		echo desimal($data,1);
+		// echo $data.'<br>';
+		// $cek=str_replace(',', '.', $data);
+		// $cek=sprintf("%.3f",$cek);
+		// echo $cek.'<br>';
+		// echo ceil($cek);
 	}
 }

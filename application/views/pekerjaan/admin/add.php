@@ -19,6 +19,7 @@
 			<div class="form-group">
 				<label>Pekerjaan</label>
 				<textarea required type="text" name="pekerjaan_pekerjaan" class="text-capitalize form-control" rows="5"></textarea>
+				<p class="help-block">*Nama Pekerjaan/Proyek</p>
 			</div>
 			<div class="form-group">
 				<label>Lokasi</label>

@@ -15,7 +15,7 @@
 								<label>Pekerjaan</label>
 								<select required class="select2 form-control" name="pekerjaan" id="pekerjaan" style="width:100%">
 									<?php foreach($pekerjaan AS $row):?>
-									<option value="<?= $row->pekerjaan_id?>"><?= ucwords($row->pekerjaan_pekerjaan)?></option>
+									<option value="<?= $row->pekerjaan_id?>"><?= ucwords($row->pekerjaan_kegiatan)?></option>
 									<?php endforeach;?>
 								</select>
 							</div>							

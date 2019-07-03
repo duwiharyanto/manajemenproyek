@@ -7,7 +7,7 @@
             </tr>
             <tr>
                 <th width="20%" align="left">Pekerjaan</th>
-                <td width="80%" align="left"><?= $analisapekerjaan->analisapekerjaan_kegiatan?></td>
+                <td width="80%" align="left"><?= ucwords($analisapekerjaan->analisapekerjaan_kegiatan)?></td>
             </tr>
             <tr>
                 <th>Kode</th>
@@ -64,10 +64,10 @@
                                         <td><?=ucwords($rows->satuan_kode)?></td>
                                         <td><?=$rows->analisadetail_koefisien?></td>
                                         <td class="price"><?="Rp " . number_format($rows->hargasatuan_hargasatuan,0,',','.')?></td>
-                                        <td class="price">
+                                        <td class="">
                                             <?php
-                                            $jumlah=intval($rows->hargasatuan_hargasatuan)*intval($rows->analisadetail_koefisien);
-                                            echo "Rp " . number_format($jumlah,0,',','.');
+                                            $jumlah=intval($rows->hargasatuan_hargasatuan)*floatval($rows->analisadetail_koefisien);
+                                            echo "Rp " . number_format($jumlah,2,',','.');
                                             ?>                                
                                         </td>
                                         <td class="text-center">
@@ -83,8 +83,8 @@
                                     <td colspan="7" align="right">
                                         <i>Jumlah <?= ucwords($row->kategorisatuan_nama)?></i>
                                     </td>
-                                    <td class="price">
-                                        <?= "Rp " . number_format($subtotal,0,',','.')?>
+                                    <td class="">
+                                        <?= "Rp " . number_format($subtotal,2,',','.')?>
                                     </td>
                                 </tr>
                             <?php else:?>
@@ -100,14 +100,14 @@
                     <?php endif;?>
                     <tr style="background-color: grey">
                         <td colspan="7" align="right">Total</td>
-                        <td colspan="2" class="price"><?= "Rp " . number_format($total,0,',','.')?></td>
+                        <td colspan="2" class=""><?= "Rp " . number_format($total,2,',','.')?></td>
                     </tr>
                 </tbody>            		
         	</table>
       <table class="table" width="100%">
         <tr>
           <td width="60%" align="left"><h3>Grand Total</h3></td>
-          <td class="price bg-red" align="right" style="font-size: 48px"><?= intval($total)?></td>
+          <td class=" bg-red" align="right" style="font-size: 48px"><?= duit2(intval($total))?></td>
         </tr>
       </table>            
         </div>

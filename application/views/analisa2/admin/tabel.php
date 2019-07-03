@@ -64,9 +64,10 @@
                   <th width="5%">id</th>
                   <th width="10%">Kode</th>
                   <th width="25%">Analisa</th>
+                  <th width="10%">Vol</th>
                   <th width="10%">Jumlah Harga</th>
-                  <th width="15%">Overhead(%)</th>
-                  <th width="15%">Harga Satuan</th>
+                  <th width="10%">Overhead(%)</th>
+                  <th width="10%">Harga Satuan</th>
                   <th width="10%" class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -77,8 +78,9 @@
                     <tr>
                       <td><?=$i?></td>
                       <td><?=$row->analisapekerjaan_id?></td>
-                      <td><?=$row->analisapekerjaan_kode?></td>
+                      <td class="<?= !$row->countdt ? 'bg-red':''?>"><?=$row->analisapekerjaan_kode?></td>
                       <td><a href="javascript:void(0)" onclick="detailanalisapekerjaan(<?=$row->analisapekerjaan_id?>)" url="<?= base_url($global->url.'detailanalisapekerjaan')?>" class="detailanalisapekerjaan"><?=ucwords($row->analisapekerjaan_kegiatan)?></a><br>
+                      <td class=""> <?=$row->analisapekerjaan_volume?> </td>
                       <td class="price"> <?=$row->jumlah?> </td>
                       <td class="">
                         <?php 
@@ -86,24 +88,22 @@
                             echo  "Rp " . number_format($overhead,0,',','.').'('.$row->analisapekerjaan_overhead ."%)";
                         ?>                         
                       </td>
-                      
-                      <td class="price"> 
+                      <td class=""> 
                         <?php 
                             $overhead=intval(intval($row->jumlah) * intval($row->analisapekerjaan_overhead)/100);
                             $hargasatuan=$overhead+intval($row->jumlah);
-                            echo $hargasatuan;
+                            echo duit2($hargasatuan);
                             $subtotalpekerjaan+=$hargasatuan;
                         ?> 
                       </td>
                       <td class="text-center">
                         <?php include 'buttonanalisapekerjaan.php';?>
                       </td>
-                    </tr> 
-                                       
+                    </tr>             
                 <?php $i++;endforeach;?>
                 <tr style="background-color: grey">
-                   <td colspan="6" align="right"> <b>Total</b></td>
-                   <td colspan="2" class="price"><?= $subtotalpekerjaan?></td> 
+                   <td colspan="7" align="right"> <b>Total</b></td>
+                   <td colspan="2" class=""><?= duit2($subtotalpekerjaan)?></td> 
                 </tr>                               
               <?php else:?>
                   <tr>
@@ -120,9 +120,5 @@
       </table>
     </div>
 </div>
-
-<!--
-
--->
 <?php include 'action.php'; ?>
 <?php include 'action2.php'; ?>

@@ -50,7 +50,7 @@
 							</select>								
 						</div>
 						<div class="col-sm-2">
-							<label>Koefisien <span id="koefisien">koe1</span></label>
+							<label>Koefisien </label>
 							<input required type="text" class="form-control" id="inptkoefisien" name="koefisien[]" value="1">
 						</div>
 						<div class="col-sm-3">

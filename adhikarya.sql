@@ -3,15 +3,15 @@
 
  Source Server         : PHPMYADMIN
  Source Server Type    : MySQL
- Source Server Version : 100131
+ Source Server Version : 100137
  Source Host           : localhost:3306
  Source Schema         : adhikarya
 
  Target Server Type    : MySQL
- Target Server Version : 100131
+ Target Server Version : 100137
  File Encoding         : 65001
 
- Date: 19/06/2019 22:22:54
+ Date: 03/07/2019 21:40:07
 */
 
 SET NAMES utf8mb4;
@@ -27,15 +27,21 @@ CREATE TABLE `analisa`  (
   `analisa_date` datetime(0) NULL DEFAULT NULL,
   `analisa_idtafsiran` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`analisa_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 152 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 165 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of analisa
 -- ----------------------------
-INSERT INTO `analisa` VALUES (147, 3, NULL, 6);
-INSERT INTO `analisa` VALUES (149, 1, NULL, 6);
 INSERT INTO `analisa` VALUES (150, 3, NULL, 3);
 INSERT INTO `analisa` VALUES (151, 1, NULL, 5);
+INSERT INTO `analisa` VALUES (153, 1, NULL, 6);
+INSERT INTO `analisa` VALUES (154, 1, NULL, 5);
+INSERT INTO `analisa` VALUES (155, 3, NULL, 4);
+INSERT INTO `analisa` VALUES (160, 2, NULL, 4);
+INSERT INTO `analisa` VALUES (161, 2, NULL, 5);
+INSERT INTO `analisa` VALUES (162, 2, NULL, 6);
+INSERT INTO `analisa` VALUES (163, 3, NULL, 2);
+INSERT INTO `analisa` VALUES (164, 3, NULL, 6);
 
 -- ----------------------------
 -- Table structure for analisa_old
@@ -68,16 +74,23 @@ CREATE TABLE `analisadetail`  (
   `analisadetail_id` int(11) NOT NULL AUTO_INCREMENT,
   `analisadetail_idanalisapekerjaan` int(11) NULL DEFAULT NULL,
   `analisadetail_idhargasatuan` int(11) NULL DEFAULT NULL,
-  `analisadetail_koefisien` int(11) NULL DEFAULT NULL,
+  `analisadetail_koefisien` varchar(11) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `analisadetail_date` date NULL DEFAULT NULL,
   PRIMARY KEY (`analisadetail_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of analisadetail
 -- ----------------------------
-INSERT INTO `analisadetail` VALUES (3, 160, 2, 1, '2019-04-11');
-INSERT INTO `analisadetail` VALUES (4, 156, 2, 1, '2019-04-11');
+INSERT INTO `analisadetail` VALUES (4, 156, 2, '2', '2019-04-11');
+INSERT INTO `analisadetail` VALUES (7, 156, 3, '1', '2019-06-27');
+INSERT INTO `analisadetail` VALUES (10, 160, 2, '1', '2019-06-27');
+INSERT INTO `analisadetail` VALUES (11, 160, 3, '6', '2019-06-27');
+INSERT INTO `analisadetail` VALUES (14, 156, 1, '5', '2019-06-27');
+INSERT INTO `analisadetail` VALUES (16, 160, 1, '1', '2019-06-28');
+INSERT INTO `analisadetail` VALUES (17, 162, 2, '1', '2019-07-01');
+INSERT INTO `analisadetail` VALUES (26, 172, 3, '0.563', '2019-07-03');
+INSERT INTO `analisadetail` VALUES (28, 172, 4, '0.056', '2019-07-03');
 
 -- ----------------------------
 -- Table structure for analisapekerjaan
@@ -88,20 +101,21 @@ CREATE TABLE `analisapekerjaan`  (
   `analisapekerjaan_idpekerjaan` int(11) NULL DEFAULT NULL,
   `analisapekerjaan_kode` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `analisapekerjaan_kegiatan` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
-  `analisapekerjaan_overhead` int(11) NULL DEFAULT NULL,
-  `analisapekerjaan_harga` int(11) NULL DEFAULT NULL,
+  `analisapekerjaan_overhead` varchar(11) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `analisapekerjaan_volume` varchar(12) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `analisapekerjaan_date` datetime(0) NULL DEFAULT NULL,
   `analisapekerjaan_total` int(11) NULL DEFAULT NULL,
   `analisapekerjaan_idsatuan` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`analisapekerjaan_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 163 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 173 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of analisapekerjaan
 -- ----------------------------
-INSERT INTO `analisapekerjaan` VALUES (156, 1, 'P.01.e.2', 'Pembongkaran pasangan batu kali', 15, NULL, '2019-04-11 00:00:00', NULL, 3);
-INSERT INTO `analisapekerjaan` VALUES (160, 3, 'p.01.e.2', 'Pembongkaran pasangan batu kali', 15, NULL, '2019-04-11 00:00:00', NULL, 3);
-INSERT INTO `analisapekerjaan` VALUES (162, 3, 'B.29', 'Bongkar beton jembatan', 17, NULL, '2019-04-11 00:00:00', NULL, 7);
+INSERT INTO `analisapekerjaan` VALUES (156, 1, 'P.01.e.2', 'Pembongkaran pasangan batu kali', '15', '276.480', '2019-04-11 00:00:00', NULL, 3);
+INSERT INTO `analisapekerjaan` VALUES (160, 3, 'p.01.e.2', 'Pembongkaran pasangan batu kali', '15', '21.600', '2019-04-11 00:00:00', NULL, 3);
+INSERT INTO `analisapekerjaan` VALUES (162, 3, 'B.29', 'Bongkar beton jembatan', '17', '184.320', '2019-04-11 00:00:00', NULL, 7);
+INSERT INTO `analisapekerjaan` VALUES (172, 3, 'T.06.a.1', 'galian pendalaman saluran', '10', '184.320', '2019-07-03 00:00:00', NULL, 8);
 
 -- ----------------------------
 -- Table structure for analisapekerjaandetail
@@ -129,14 +143,15 @@ CREATE TABLE `hargasatuan`  (
   PRIMARY KEY (`hargasatuan_id`) USING BTREE,
   INDEX `fk_idkatefori_on_hargasatuan`(`hargasatuan_idkategori`) USING BTREE,
   CONSTRAINT `fk_idkatefori_on_hargasatuan` FOREIGN KEY (`hargasatuan_idkategori`) REFERENCES `kategorisatuan` (`kategorisatuan_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of hargasatuan
 -- ----------------------------
 INSERT INTO `hargasatuan` VALUES (1, 1, 'M.02', 'Air', '130', '4', '-');
-INSERT INTO `hargasatuan` VALUES (2, 1, 'M.03b', 'Batu Belah', '225000', '4', 'dawda');
-INSERT INTO `hargasatuan` VALUES (3, 2, 'L.01', 'Tenaga/Pekerja tidak terlatih', '53000', '4', '');
+INSERT INTO `hargasatuan` VALUES (2, 1, 'M.03b', 'Batu Belah', '225000', '8', 'dawda');
+INSERT INTO `hargasatuan` VALUES (3, 2, 'L.01', 'Tenaga/Pekerja tidak terlatih', '53000', '4', '-');
+INSERT INTO `hargasatuan` VALUES (4, 2, 'L.02', 'Mandor', '70000', '4', '-');
 
 -- ----------------------------
 -- Table structure for kategorisatuan
@@ -149,14 +164,66 @@ CREATE TABLE `kategorisatuan`  (
   `kategorisatuan_dibuat` datetime(0) NULL DEFAULT NULL,
   `kategorisatuan_keterangan` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
   PRIMARY KEY (`kategorisatuan_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of kategorisatuan
 -- ----------------------------
 INSERT INTO `kategorisatuan` VALUES (1, 'A', 'Bahan', '2018-09-12 00:00:00', 'kategori bahan');
-INSERT INTO `kategorisatuan` VALUES (2, 'B', 'Upah', '2018-09-12 00:00:00', 'kategori upah');
+INSERT INTO `kategorisatuan` VALUES (2, 'B', 'Tenaga', '2018-09-12 00:00:00', 'kategori upah');
 INSERT INTO `kategorisatuan` VALUES (3, 'C', 'Alat', '2018-09-12 00:00:00', 'kategori alat');
+INSERT INTO `kategorisatuan` VALUES (4, 'E', 'Tenaga Kerja', '2019-06-26 00:00:00', 'Kategori Tenaga');
+
+-- ----------------------------
+-- Table structure for log
+-- ----------------------------
+DROP TABLE IF EXISTS `log`;
+CREATE TABLE `log`  (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `log_iduser` int(11) NULL DEFAULT NULL,
+  `log_keterangan` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
+  `log_date` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`log_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of log
+-- ----------------------------
+INSERT INTO `log` VALUES (9, 1, 'logout', '2019-06-30 00:00:00');
+INSERT INTO `log` VALUES (10, 21, 'login', '2019-06-30 00:00:00');
+INSERT INTO `log` VALUES (11, 21, 'logout', '2019-06-30 00:00:00');
+INSERT INTO `log` VALUES (12, 1, 'login', '2019-06-30 00:00:00');
+INSERT INTO `log` VALUES (13, 1, 'logout', '2019-06-30 00:00:00');
+INSERT INTO `log` VALUES (14, 1, 'login', '2019-06-30 00:00:00');
+INSERT INTO `log` VALUES (15, 1, 'logout', '2019-06-30 04:26:13');
+INSERT INTO `log` VALUES (16, 1, 'login', '2019-06-30 09:27:16');
+INSERT INTO `log` VALUES (17, 1, 'logout', '2019-06-30 09:28:17');
+INSERT INTO `log` VALUES (18, 21, 'login', '2019-06-30 09:28:21');
+INSERT INTO `log` VALUES (19, 21, 'logout', '2019-06-30 09:41:25');
+INSERT INTO `log` VALUES (20, 1, 'login', '2019-07-01 20:29:45');
+INSERT INTO `log` VALUES (21, 1, 'logout', '2019-07-01 22:29:25');
+INSERT INTO `log` VALUES (22, 1, 'login', '2019-07-01 22:29:28');
+INSERT INTO `log` VALUES (23, 1, 'logout', '2019-07-01 22:29:31');
+INSERT INTO `log` VALUES (24, NULL, 'logout', '2019-07-01 22:30:05');
+INSERT INTO `log` VALUES (25, 1, 'login', '2019-07-01 22:30:17');
+INSERT INTO `log` VALUES (26, 1, 'logout', '2019-07-01 22:30:20');
+INSERT INTO `log` VALUES (27, 1, 'login', '2019-07-02 18:23:04');
+INSERT INTO `log` VALUES (28, NULL, 'logout', '2019-07-02 20:18:10');
+INSERT INTO `log` VALUES (29, 1, 'login', '2019-07-02 20:18:12');
+INSERT INTO `log` VALUES (30, NULL, 'logout', '2019-07-02 21:04:39');
+INSERT INTO `log` VALUES (31, 1, 'login', '2019-07-02 21:04:41');
+INSERT INTO `log` VALUES (32, NULL, 'logout', '2019-07-02 22:33:38');
+INSERT INTO `log` VALUES (33, 1, 'login', '2019-07-02 22:33:40');
+INSERT INTO `log` VALUES (34, 1, 'logout', '2019-07-02 23:31:25');
+INSERT INTO `log` VALUES (35, 1, 'login', '2019-07-02 23:31:27');
+INSERT INTO `log` VALUES (36, 1, 'login', '2019-07-03 19:06:20');
+INSERT INTO `log` VALUES (37, NULL, 'logout', '2019-07-03 19:50:33');
+INSERT INTO `log` VALUES (38, 1, 'login', '2019-07-03 19:50:35');
+INSERT INTO `log` VALUES (39, NULL, 'logout', '2019-07-03 20:39:32');
+INSERT INTO `log` VALUES (40, 1, 'login', '2019-07-03 20:39:33');
+INSERT INTO `log` VALUES (41, NULL, 'logout', '2019-07-03 21:20:01');
+INSERT INTO `log` VALUES (42, NULL, 'logout', '2019-07-03 21:20:03');
+INSERT INTO `log` VALUES (43, 1, 'login', '2019-07-03 21:20:04');
 
 -- ----------------------------
 -- Table structure for menu
@@ -172,7 +239,7 @@ CREATE TABLE `menu`  (
   `menu_urutan` int(5) NULL DEFAULT NULL,
   `menu_status` varchar(2) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of menu
@@ -193,6 +260,7 @@ INSERT INTO `menu` VALUES (13, 'kategori', 'fa fa-circle-o', 1, 'kategori/admin'
 INSERT INTO `menu` VALUES (14, 'satuan', 'fa fa-circle-o', 1, 'satuan/admin', 1, 1, '1');
 INSERT INTO `menu` VALUES (15, 'pengguna', 'fa fa-circle-o', 11, 'user/admin2', 1, 1, '1');
 INSERT INTO `menu` VALUES (16, 'analisa', 'fa fa-circle-o', 4, 'analisa2/admin', 3, 1, '1');
+INSERT INTO `menu` VALUES (17, 'log', 'fa fa-circle-o', 11, 'log/admin', 1, 2, '1');
 
 -- ----------------------------
 -- Table structure for pekerjaan
@@ -210,9 +278,9 @@ CREATE TABLE `pekerjaan`  (
 -- ----------------------------
 -- Records of pekerjaan
 -- ----------------------------
-INSERT INTO `pekerjaan` VALUES (1, 'penignkatan/rahabilitasi saluran drainase kelurahan kramat utara', 'fisik rehabilitasi/peningkatan saluran drainase kelurahan kramat utara', 'kota magelang', '2018');
+INSERT INTO `pekerjaan` VALUES (1, 'peningkatan/rahabilitasi saluran drainase kelurahan kramat utara', 'fisik rehabilitasi/peningkatan saluran drainase kelurahan kramat utara', 'kota magelang', '2018');
 INSERT INTO `pekerjaan` VALUES (2, 'Pembuatan Jalan Kabupaten Magelang KM 18', 'Pembuatan Jalan Kabupaten Magelang KM 18', 'kota Magelang', '2018');
-INSERT INTO `pekerjaan` VALUES (3, 'Test kegiatan', 'test pekerjaan', 'bantul', '2019');
+INSERT INTO `pekerjaan` VALUES (3, 'Test kegiatan', 'saluran drainase u ditch UK', 'bantul', '2019');
 
 -- ----------------------------
 -- Table structure for satuan
