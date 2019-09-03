@@ -11,7 +11,7 @@
  Target Server Version : 100137
  File Encoding         : 65001
 
- Date: 03/07/2019 21:40:07
+ Date: 03/09/2019 10:35:45
 */
 
 SET NAMES utf8mb4;
@@ -184,7 +184,7 @@ CREATE TABLE `log`  (
   `log_keterangan` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
   `log_date` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 44 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of log
@@ -224,6 +224,12 @@ INSERT INTO `log` VALUES (40, 1, 'login', '2019-07-03 20:39:33');
 INSERT INTO `log` VALUES (41, NULL, 'logout', '2019-07-03 21:20:01');
 INSERT INTO `log` VALUES (42, NULL, 'logout', '2019-07-03 21:20:03');
 INSERT INTO `log` VALUES (43, 1, 'login', '2019-07-03 21:20:04');
+INSERT INTO `log` VALUES (44, 1, 'login', '2019-07-05 10:52:20');
+INSERT INTO `log` VALUES (45, 1, 'logout', '2019-07-05 10:52:32');
+INSERT INTO `log` VALUES (46, 1, 'login', '2019-07-08 11:10:16');
+INSERT INTO `log` VALUES (47, NULL, 'logout', '2019-07-08 12:54:12');
+INSERT INTO `log` VALUES (48, 1, 'login', '2019-07-08 12:57:35');
+INSERT INTO `log` VALUES (49, 1, 'login', '2019-09-03 10:34:12');
 
 -- ----------------------------
 -- Table structure for menu

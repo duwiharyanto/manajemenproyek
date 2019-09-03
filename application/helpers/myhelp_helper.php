@@ -10,6 +10,11 @@
 		$CI =& get_instance();  
 		$CI->load->view($backend);
 	}
+	function export($data){
+		$backend="template/export";
+		$CI =& get_instance();  
+		$CI->load->view($backend);
+	}	
 	function duit($jumlah){
 		return "Rp " . number_format($jumlah,0,',','.');
 	}

@@ -16,7 +16,7 @@
       });
       return false
     })           
-    $('#datatabel').DataTable();
+    
     $('.datepicker').datepicker({
         autoclose: true,
         todayHighlight: true,

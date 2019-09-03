@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="<?= base_url();?>asset/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="<?= base_url();?>asset/dist/css/sweetalert.css">
   <link rel="stylesheet" href="<?= base_url();?>asset/dist/css/skins/_all-skins.min.css">
+
   
   <!--JAVASCRIPT CORE-->
   <script src="<?= base_url();?>asset/plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -23,6 +24,8 @@
   <script src="<?= base_url()?>asset/plugins/chartjs/utils.js"></script>
   <script src="<?= base_url();?>asset/plugins/datatables/jquery.dataTables.min.js"></script>
   <script src="<?= base_url();?>asset/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
   <script src="<?= base_url();?>asset/plugins/select2/select2.full.min.js"></script> 
   <script src="<?= base_url();?>asset/plugins/datepicker/bootstrap-datepicker.js"></script>
   <script src="<?= base_url();?>asset/plugins/ckeditor/ckeditor.js"></script>  

@@ -3,8 +3,11 @@ PROGRAM MANAJEMEN PROYEK
 ########################
 
 PHP : <= 7
+
 Framework : Codeigniter 3.10
+
 Email : haryanto.duwi@gmail.com
+
 ADHIKARYA
 
 
@@ -19,3 +22,5 @@ a rich set of libraries for commonly needed tasks, as well as a simple
 interface and logical structure to access these libraries. CodeIgniter lets
 you creatively focus on your project by minimizing the amount of code needed
 for a given task.
+
+

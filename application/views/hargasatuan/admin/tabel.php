@@ -39,4 +39,16 @@
         	</p>
         </div>
 </div>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
 <?php include 'action.js'; ?>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#datatabel').DataTable({
+ 			// "dom": '<"toolbar">lfrtip'
+ 			"dom": '<"top"fl>rt<"bottom"ip><"clear">'
+ 		})
+ 		$("div.toolbar").html('<b>Custom tool bar! Text/images etc.</b>');
+	})
+</script>
